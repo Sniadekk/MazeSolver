@@ -1,4 +1,4 @@
-
+// 0 - pusta komórka 1 - start 2 - koniec 3 - przeszkoda 4 - puste pole po przejściu "szukacza" 5 - droga
 class Maze
 {
 	constructor(){
@@ -20,7 +20,7 @@ class Maze
 
 	init()
 	{
-		this.canvas = document.getElementById("canvas");  //zastanawiałem się czy wsadzić to wszystko w konstruktor czy lepiej jednak nie
+		this.canvas = document.getElementById("canvas");  //do konstruktora
 		this.ctx = this.canvas.getContext('2d');
 		this.cellSize = 25;
 		this.mapWidth = prompt("Podaj ilość komórek (szerokość)");			// in cells
@@ -59,7 +59,7 @@ class Maze
 				}
 				else
 				{
-				console.log(this.cells[x][y]);
+				
 				//console.log('Cell Type: ',this.cellType,"Begin: ",this.begin,"end: ",this.end);
 				if(this.cellType === 1)
 				{
@@ -105,15 +105,16 @@ class Maze
 			this.cells.push([]);
 			for(let y = 0 ; y < this.mapHeight ; y++)
 			{
-				let number = this.getRandom();
-				console.log(number);
+				//let number = this.getRandom();
+				let number = 0;
+				//console.log(number);
 				this.cells[x][y] = new Cell(number,x,y);
 			}
 
 
 
 		}
-		console.log(this.cells);
+		//console.log(this.cells);
 	}
 	//
 	// 0 - pusta komórka 1 - start 2 - koniec 3 - przeszkoda
@@ -215,7 +216,7 @@ class Cell{
 	{
 		if(maze.pathFound === true)
 		{
-			makePath();
+			
 			return;
 		}
 		for(let x = 0 ; x < this.neighbours.length ; x++)
@@ -230,7 +231,8 @@ class Cell{
 
 			if(xN === maze.endX && xY === maze.endY)
 			{
-				console.log("Znalazłem wyjście");
+				document.getElementById("start").innerHTML = "ZNALAZŁEM WYJŚCIE!";
+				maze.cells[maze.endX][maze.endY].value = 2;
 				maze.pathFound = true;
 			}
 
