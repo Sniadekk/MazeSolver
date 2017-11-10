@@ -1,4 +1,5 @@
 // 0 - pusta komórka 1 - start 2 - koniec 3 - przeszkoda 4 - puste pole po przejściu "szukacza" 5 - droga
+// Pierwsze kliknięcie zaznacza start, drugie - koniec. Od trzeciego stawiamy przeszkody.
 class Maze
 {
 	constructor(){
@@ -42,6 +43,8 @@ class Maze
 		this.startX = 0;
 		this.startY = 0;
 
+		this.pathMade = false;
+
 		this.pathFound = false;
 
 		this.endX = 0;
@@ -67,6 +70,8 @@ class Maze
 					this.begin = true;
 					this.startX = x;
 					this.startY = y;
+					lastX = x;
+					lastY = y;
 					this.cells[x][y].value = this.cellType;
 					this.cellType = 2;
 				}
@@ -167,8 +172,37 @@ class Maze
 			maze.ctx.clearRect(0,0,maze.mapWidth*maze.cellSize,maze.mapHeight*maze.cellSize);
 
 			//
+			//
 			maze.drawTemplate();
 			//
+			if(maze.pathMade === true)
+			{
+				maze.drawPath();
+			}
+			//
+		}
+	}
+
+	drawPath()
+	{
+		
+		for(let x = 0 ; x < path.length ; x++)
+		{
+			if(x === 0 )
+			{
+				this.ctx.fillStyle = "red";
+			}
+			else if(x === path.length -1)
+			{
+				this.ctx.fillStyle = "orange";
+			}
+			else
+			{
+				this.ctx.fillStyle = "#7f841b";
+			}
+			this.ctx.fillRect(path[x].x*this.cellSize,path[x].y*this.cellSize,this.cellSize,this.cellSize);
+			this.ctx.strokeRect(path[x].x*this.cellSize,path[x].y*this.cellSize,this.cellSize,this.cellSize);
+			this.ctx.fillStyle = "black";
 		}
 	}
 }
@@ -188,6 +222,11 @@ const directions = [
 {x:0,y:-1}
 ];
 
+
+let lastX = maze.startX;
+let lastY = maze.startY;
+let path = [];
+
 class Cell{
 	constructor(value,x,y){
 		this.x = x;
@@ -203,7 +242,7 @@ class Cell{
 		{
 			let xN = this.x - directions[x].x;
 			let yN = this.y - directions[x].y;
-			if(xN < 0 || yN < 0 || xN > maze.mapWidth || yN > maze.mapHeight)
+			if(xN < 0 || yN < 0 || xN > maze.mapWidth-1 || yN > maze.mapHeight-1)
 			{
 				continue;
 			}
@@ -216,7 +255,6 @@ class Cell{
 	{
 		if(maze.pathFound === true)
 		{
-			
 			return;
 		}
 		for(let x = 0 ; x < this.neighbours.length ; x++)
@@ -234,16 +272,53 @@ class Cell{
 				document.getElementById("start").innerHTML = "ZNALAZŁEM WYJŚCIE!";
 				maze.cells[maze.endX][maze.endY].value = 2;
 				maze.pathFound = true;
+				this.makePath();
 			}
-
+			else{
+				document.getElementById("start").innerHTML = "SZUKAM...";
+			}
 
 			setTimeout( () => {
 				maze.cells[xN][xY].findPath();
 			},100);
 		}
 	}
-	// makePath()
-	// {
-	// 	//if[this.startX][this.startY]
-	// }
+	makePath()
+	{
+		
+		do
+		{
+			if(maze.endX > lastX)
+			{
+				lastX++;
+
+			}
+
+			else if(maze.endX < lastX)
+			{
+				lastX--;
+			}
+
+			if(maze.endY > lastY)
+			{
+				lastY++;
+			}
+
+			else if (maze.endY < lastY)
+			{
+				lastY--;
+			}
+			path.push({x:lastX,y:lastY});
+			console.log(lastX, maze.endX,  lastY,  maze.endY);
+			console.log(lastX == maze.endX );
+			console.log(lastY == maze.endY);
+		}while(lastX != maze.endX || lastY != maze.endY)
+
+		setTimeout( () => {
+				maze.pathMade = true;
+				maze.drawPath();
+			},100);
+	}
+
+	
 }
