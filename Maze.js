@@ -1,5 +1,6 @@
 // 0 - pusta komórka 1 - start 2 - koniec 3 - przeszkoda 4 - puste pole po przejściu "szukacza" 5 - droga
 // Pierwsze kliknięcie zaznacza start, drugie - koniec. Od trzeciego stawiamy przeszkody.
+//Do dodania: lepszy algorytm np. A*, podczas rysowania ścieżki uwzględniać przeszkody.
 class Maze
 {
 	constructor(){
